@@ -51,7 +51,7 @@ fun listExtend() {
     items.shuffle()
     println("item shuffle to $items")
     //所以元素都替换
-    items.replaceAll { it * 2 }
+//    items.replaceAll { it * 2 }
     println("item replaceAll to $items")
     //把集合用5填充
     items.fill(5)
