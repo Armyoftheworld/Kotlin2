@@ -27,11 +27,11 @@ fun main() {
 //    conflateFlow()
 //    zipCombineFlow()
 //    flatMapFlow()
-//    flatMapMergeFlow()
+    flatMapMergeFlow()
 //    flatMapLatestFlow()
 //    catchFlowException()
 //    completeFlow()
-    launchInFlow()
+//    launchInFlow()
 }
 
 fun launchInFlow() = runBlocking {
@@ -133,6 +133,9 @@ fun flatMapLatestFlow() = runBlocking {
         .collect{ println("$it at ${System.currentTimeMillis() - startTime}ms from start")}
 }
 
+/**
+ * 多个流并行执行
+ */
 fun flatMapMergeFlow() = runBlocking {
     val time = measureTimeMillis {
         val startTime = System.currentTimeMillis()
@@ -144,6 +147,9 @@ fun flatMapMergeFlow() = runBlocking {
     println("flatMapMerge consumes time $time")
 }
 
+/**
+ * 多个流串行执行
+ */
 fun flatMapFlow() = runBlocking {
     val time = measureTimeMillis {
         val startTime = System.currentTimeMillis()
@@ -175,8 +181,8 @@ fun zipCombineFlow() = runBlocking {
 }
 
 /**
- * conflate 操作符可以⽤于跳过中间值
- * 当流代表部分操作结果或操作状态更新时，可能没有必要处理每个值，⽽是只处理最新的那个
+ * conflate 操作符可以用于跳过中间值
+ * 当流代表部分操作结果或操作状态更新时，可能没有必要处理每个值，而是只处理最新的那个
  */
 fun conflateFlow() = runBlocking {
     var time = measureTimeMillis {
@@ -296,7 +302,7 @@ fun terminalOperatorFlow() = runBlocking {
 }
 
 /**
- * 限⻓操作符
+ * 限长操作符
  */
 fun takeFlow() = runBlocking {
     flow {
@@ -314,7 +320,7 @@ fun takeFlow() = runBlocking {
 }
 
 /**
- * 使⽤ transform 操作符，我们可以 发射 任意值任意次
+ * 使用 transform 操作符，我们可以 发射 任意值任意次
  */
 fun transformFlow() = runBlocking {
     val stringMap = StringMap()
