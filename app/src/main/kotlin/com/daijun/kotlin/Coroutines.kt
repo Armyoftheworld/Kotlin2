@@ -12,7 +12,26 @@ import kotlinx.coroutines.*
 fun main() {
 //    doUnCancellableJob()
 //    timeout()
-    parentCoroutine()
+//    parentCoroutine()
+    launchTest()
+//    globalLaunchTest()
+    println("end")
+}
+
+fun launchTest() = runBlocking(Dispatchers.IO) {
+    launch {
+        kotlinx.coroutines.delay(1000)
+        println("launch")
+    }
+    println("runBlocking")
+}
+
+fun globalLaunchTest() {
+    GlobalScope.launch(Dispatchers.IO) {
+        kotlinx.coroutines.delay(1000)
+        println("GlobalScope launch")
+    }
+    println("GlobalScope end")
 }
 
 fun parentCoroutine() = runBlocking {
