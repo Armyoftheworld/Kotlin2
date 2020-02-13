@@ -13,9 +13,10 @@ fun main() {
 //    doUnCancellableJob()
 //    timeout()
 //    parentCoroutine()
-    launchTest()
-//    globalLaunchTest()
+//    launchTest()
+    globalLaunchTest()
     println("end")
+    Thread.sleep(2000L)
 }
 
 fun launchTest() = runBlocking(Dispatchers.IO) {
@@ -30,6 +31,9 @@ fun globalLaunchTest() {
     GlobalScope.launch(Dispatchers.IO) {
         kotlinx.coroutines.delay(1000)
         println("GlobalScope launch")
+    }
+    GlobalScope.launch(Dispatchers.IO) {
+        println("GlobalScope launch2")
     }
     println("GlobalScope end")
 }
