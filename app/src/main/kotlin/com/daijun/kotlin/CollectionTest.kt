@@ -58,7 +58,7 @@ fun main() {
     // 两次filter的结果都在filterResult里
     println(filterResult)
 
-    val nums = setOf(1, 2, 3)
+    var nums = setOf(1, 2, 3)
     println(nums.mapNotNull { if (it == 2) null else it * 3 })
     println(nums.mapIndexedNotNull { index, i -> if (index == 0) null else index * i })
 
@@ -82,7 +82,8 @@ fun main() {
     // 打平，只能打平一级
     val numberSets = listOf(setOf(1, 2, 3), setOf(4, 5), setOf(6))
     println("打平结果：${numberSets.flatten()}")
-    val deepSets = listOf(setOf(setOf(1)), setOf(setOf(2, 3)), setOf(setOf(4, 5, 6))) // [1, 2, 3, 4, 5, 6]
+    val deepSets =
+        listOf(setOf(setOf(1)), setOf(setOf(2, 3)), setOf(setOf(4, 5, 6))) // [1, 2, 3, 4, 5, 6]
     println("打平结果2：${deepSets.flatten()}") // [[1], [2, 3], [4, 5, 6]]
 
     println(numbers.joinToString(separator = "|", prefix = "start: ", postfix = " :end"))
@@ -94,6 +95,93 @@ fun main() {
     // partition() ‒ 通过⼀个谓词过滤集合并且将不匹配的元素存放在⼀个单独的列表中
     val (match, other) = numbers.partition { it.length > 3 }
     println("partition match = $match, other = $other")
+
+    // 分组
+    println(numbers.groupBy({ it.first().toUpperCase() }, { it.capitalize() }))
+    println(numbers.groupingBy { it.first().toUpperCase() }.eachCount())
+
+    // 截取
+    println("numbers.slice(0..3 step 2) = ${numbers.slice(0..3 step 2)}")
+    println("numbers.slice(setOf(0, 2)) = ${numbers.slice(setOf(0, 2))}")
+
+    // Take 与 drop
+    println("numbers.take(1) = ${numbers.take(1)}")
+    println("numbers.takeLast(1) = ${numbers.takeLast(1)}")
+    println("numbers.drop(1) = ${numbers.drop(1)}")
+    println("numbers.dropLast(1) = ${numbers.dropLast(1)}")
+    println("numbers.takeWhile { it.length == 3 } = ${numbers.takeWhile { it.length == 3 }}")
+    println("numbers.takeLastWhile { it.length == 4 } = ${numbers.takeLastWhile { it.length == 4 }}")
+    println("numbers.dropWhile { it.length == 3 } = ${numbers.dropWhile { it.length == 3 }}")
+    println("numbers.dropLastWhile { it.length == 4 } = ${numbers.dropLastWhile { it.length == 4 }}")
+
+    // Chunked 分块
+    nums = (1..14).toSet()
+    println("nums.chunked(3) = ${nums.chunked(3)}")
+    // 第二个参数是对每个分块的集合的操作
+    println("nums.chunked(3) { it.sum() } = ${nums.chunked(3) { it.sum() }}")
+
+    // 滑动窗口, partialWindows参数跟最后一个窗口有关
+    println("nums.windowed(3) = ${nums.windowed(3, 2, partialWindows = false)}")
+    println("nums.windowed(3) = ${nums.windowed(3, 2, partialWindows = true)}")
+    println("numbers.windowed(2) = ${numbers.windowed(2)}")
+    println("numbers.zipWithNext() = ${numbers.zipWithNext()}")
+
+    // 按位置取
+    println("numbers.elementAt(3) = ${numbers.elementAt(3)}")
+    println("numbers[3] = ${numbers[3]}")
+    println("numbers.elementAtOrNull(5) = ${numbers.elementAtOrNull(5)}")
+    println("numbers.elementAtOrNull(5) = ${numbers.elementAtOrElse(5) { "this index: $it is out of bound" }}")
+
+    // 按条件取
+    // firstOrNull与find等价
+    println("numbers.firstOrNull { it.length > 6 } = ${numbers.firstOrNull { it.length > 6 }}")
+    println("numbers.find { it.length > 6 } = ${numbers.find { it.length > 6 }}")
+    // lastOrNull与findLast等价
+    println("numbers.lastOrNull { it.length > 6 } = ${numbers.lastOrNull { it.length > 6 }}")
+    println("numbers.findLast { it.length > 6 } = ${numbers.findLast { it.length > 6 }}")
+
+    // 排序
+    println("numbers.sortedWith = ${numbers.sortedWith(Comparator { o1, o2 ->
+        o1.compareTo(o2)
+    })}")
+    println("numbers.sortedWith(compareBy { it }) = ${numbers.sortedWith(compareBy { it })}")
+    println("numbers.sortedBy { it } = ${numbers.sortedBy { it.length }}")
+
+    // 翻转
+    println("numbers.reversed() = ${numbers.reversed()}")
+    val newList = numbers.toMutableList()
+    // 原集合改变了，会影响翻转后的集合
+    val asReversed = newList.asReversed()
+    println("newList.asReversed() = $asReversed")
+    newList += "five"
+    println("newList = $newList")
+    println("asReversed = $asReversed")
+
+    // 集合打乱
+    println("numbers.shuffled() = ${numbers.shuffled()}")
+
+    // 累计计算
+    println("nums.reduce { acc, i ->  acc + i} = ${nums.reduce { acc, i ->
+        acc + i * 2
+    }}")
+    // fold带有初始值，会多一步计算，多计算第一个元素
+    println("nums.fold(0) { acc, i ->  acc + i} = ${nums.fold(0) { acc, i ->
+        acc + i * 2
+    }}")
+    // reduceRight 从后往前累加
+    println(
+        "nums.toList().reduceRight { acc, i ->  acc + i} = " +
+                "${nums.toList().reduceRight { i, acc ->
+                    acc + i * 2
+                }}"
+    )
+    // foldRight带有初始值，会多一步计算，多计算最后一个元素
+    println(
+        "nums.toList().foldRight(0) { acc, i -> acc + i * 2 } = " +
+                "${nums.toList().foldRight(0) { i, acc ->
+                    acc + i * 2
+                }}"
+    )
 }
 
 fun compareSequenceIterate() {
@@ -124,7 +212,10 @@ fun compareSequenceIterate() {
 //    }
 }
 
-class MyList(override val size: Int) : AbstractList<String>() {
+class MyList(
+    override
+    val size: Int
+) : AbstractList<String>() {
     override fun get(index: Int): String {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
