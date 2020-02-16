@@ -182,6 +182,35 @@ fun main() {
                     acc + i * 2
                 }}"
     )
+
+    println("numbers.getOrNull(8) = ${numbers.getOrNull(8)}")
+    println("numbers.getOrElse(8) { it } = ${numbers.getOrElse(8) { it }}")
+
+    // 如果原始集合的元素发⽣变化，则它在先前创建的⼦列表中也会发⽣变化，反之亦然
+    val subList = newList.subList(0, 2)
+    println("subList = $subList")
+    newList[0] = "zero"
+    println("subList = $subList")
+
+    println("numbers.indexOfFirst { it.length == 3 } = ${numbers.indexOfFirst { it.length == 3 }}")
+    println("numbers.indexOfLast { it.length == 3 } = ${numbers.indexOfLast { it.length == 3 }}")
+
+    // Set 相关操作
+    val sets = numbers.toSet()
+    // 集合的并集
+    println("sets union setOf(\"zreo\", \"one\") = ${sets union setOf("zreo", "one")}")
+    // 集合的交集
+    println("sets intersect setOf(\"zreo\", \"one\") = ${sets intersect setOf("zreo", "one")}")
+    // 集合的差集
+    println("sets subtract setOf(\"zreo\", \"one\") = ${sets subtract setOf("zreo", "one")}")
+
+    // Map 相关操作
+    val maps = mapOf("name" to "Army", "age" to "18")
+    // 用getValue的话，如果key不存在，会抛出异常
+//    println(maps.getValue("sex"))
+    println("maps.getOrElse(\"sex\") { \"male\" } = ${maps.getOrElse("sex") { "male" }}")
+    println("maps + Pair(\"sex\", \"female\") = ${maps + Pair("sex", "female")}")
+
 }
 
 fun compareSequenceIterate() {

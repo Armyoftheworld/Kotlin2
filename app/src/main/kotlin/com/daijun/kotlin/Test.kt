@@ -16,4 +16,6 @@ fun main() {
     println(test.map?.isEmpty() == false)
     println(test.map?.isEmpty() == true)
 
+    println("11,22,3333".split(","))
+
 }
