@@ -7,16 +7,16 @@ package com.daijun.kotlin
  * @description 对象表达式与对象声明
  */
 
-open class A(val x: Int) {
+open class F(val x: Int) {
     open val y = x
 }
 
-interface B {
+interface E {
     fun sayHello()
 }
 
 // 如果超类型有⼀个构造函数，则必须传递适当的构造函数参数给它
-val ab: A = object : A(1), B {
+val ab: F = object : F(1), E {
 
     override val y = 15
 
@@ -61,7 +61,7 @@ class C {
 /**
  * 对象声明
  */
-object ObjectProvider : B {
+object ObjectProvider : E {
 
     val x = 0
 
@@ -72,7 +72,7 @@ object ObjectProvider : B {
 
 class D {
     // 伴⽣对象可以继承类和实现接口
-    companion object : A(1), B {
+    companion object : F(1), E {
 
         override val y: Int = 6
 

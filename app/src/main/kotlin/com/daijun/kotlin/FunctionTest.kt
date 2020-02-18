@@ -1,7 +1,6 @@
 package com.daijun.kotlin
 
 import android.app.Activity
-import android.content.Context
 import android.view.View
 import android.widget.LinearLayout
 
@@ -64,25 +63,31 @@ fun main() {
     // 匿名函数语法允许你直接指定函数字面值的接收者类型
     val sum = fun Int.(other: Int): Int = this + other
 
-    html {
-        body()
+    android {
+        defaultConfig()
     }
 
     // 我们使用 reified 修饰符来限定类型参数
     val view = View(Activity())
     view.findParentOfType<LinearLayout>()
+
+    // takeIf 及 takeUnless 与作⽤域函数⼀起特别有⽤。
+    // ⼀个很好的例⼦是⽤ let 链接它们，以便 在与给定谓词匹配的对象上运⾏代码块
+    list.takeIf { it.size > 0 }?.let {
+        println(it)
+    }
 }
 
-class Html {
-    fun body() {
+class Android {
+    fun defaultConfig() {
         println("this is body")
     }
 }
 
-fun html(init: Html.() -> Unit): Html {
-    val html = Html()
-    html.init()
-    return html
+fun android(init: Android.() -> Unit): Android {
+    val android = Android()
+    android.init()
+    return android
 }
 
 // 具体化的类型参数, 内联函数支持 具体化的类型参数
