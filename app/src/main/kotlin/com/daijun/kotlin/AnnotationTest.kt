@@ -43,3 +43,5 @@ class AnnotationTest(@field:PrintLog var name: String,
     var loves: String = ""
 }
 
+
+
