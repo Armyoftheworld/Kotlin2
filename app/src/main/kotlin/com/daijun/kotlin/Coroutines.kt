@@ -1,6 +1,9 @@
 package com.daijun.kotlin
 
 import kotlinx.coroutines.*
+import kotlin.concurrent.thread
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 /**
  * @author Army
@@ -14,9 +17,102 @@ fun main() {
 //    timeout()
 //    parentCoroutine()
 //    launchTest()
-    globalLaunchTest()
-    println("end")
-    Thread.sleep(2000L)
+//    globalLaunchTest()
+//    println("end")
+    testConvertCallbackToCoroutine()
+//    println(runCatching {
+//        if (System.currentTimeMillis() % 2 == 0L) {
+//            "Success"
+//        } else {
+//            throw IllegalArgumentException()
+//        }
+//    })
+}
+
+fun testConvertCallbackToCoroutine() = runBlocking {
+    println("1")
+    val job = launch {
+        println("2")
+        val call = Call("failure")
+        try {
+            call.convertCallbackToCoroutine()
+        } catch (e: Throwable) {
+            e.printStackTrace()
+        }
+        println("3")
+        for (index in 1..10) {
+            println(index)
+            kotlinx.coroutines.delay(200L)
+        }
+    }
+    println("4")
+    kotlinx.coroutines.delay(500L)
+//    job.cancel()
+}
+
+private suspend fun Call.convertCallbackToCoroutine(): String =
+    suspendCancellableCoroutine { continuation ->
+
+        enqueue(object : Call.Callback {
+            override fun onSuccess(result: String) {
+//                    if (result == "success") {
+//                        continuation.resume(result)
+//                    } else {
+//                        continuation.resumeWithException(IllegalArgumentException())
+//                    }
+                continuation.resumeWith(runCatching {
+                    if (result == "success") {
+                        result
+                    } else {
+                        throw IllegalArgumentException()
+                    }
+                })
+            }
+
+            override fun onFailure(t: Throwable) {
+                println("onFailure")
+                if (continuation.isCancelled) {
+                    println("continuation is cancelled")
+                    return
+                }
+                continuation.resumeWithException(t)
+            }
+
+        })
+
+        continuation.invokeOnCancellation {
+            try {
+                cancel()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+class Call(private val result: String) {
+
+    private var thread: Thread? = null
+
+    fun enqueue(callback: Callback) {
+        thread = thread {
+            try {
+                Thread.sleep(2000L)
+                callback.onSuccess(result)
+            } catch (e: Throwable) {
+                callback.onFailure(e)
+            }
+        }
+    }
+
+    fun cancel() {
+        thread?.interrupt()
+    }
+
+    interface Callback {
+        fun onSuccess(result: String)
+
+        fun onFailure(t: Throwable)
+    }
 }
 
 fun launchTest() = runBlocking(Dispatchers.IO) {
