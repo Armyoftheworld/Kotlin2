@@ -26,8 +26,8 @@ fun main() {
 //    bufferFlow()
 //    conflateFlow()
 //    zipCombineFlow()
-//    flatMapFlow()
-    flatMapMergeFlow()
+    flatMapFlow()
+//    flatMapMergeFlow()
 //    flatMapLatestFlow()
 //    catchFlowException()
 //    completeFlow()
@@ -159,6 +159,11 @@ fun flatMapFlow() = runBlocking {
             .collect{ println("$it at ${System.currentTimeMillis() - startTime}ms from start")}
     }
     println("flatMapConcat consumes time $time")
+    flowOf(1)
+        .flatMapConcat { flowOf("item = $it") }
+        .collect {
+            println("flatmap result = $it")
+        }
 }
 
 fun requestFlow(index: Int) = flow{
